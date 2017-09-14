@@ -62,6 +62,11 @@ public abstract class CachedIndicator<T> extends AbstractIndicator<T> {
 
     @Override
     public T getValue(int index) {
+        getValue( index, false );   
+    }
+        
+    public T getValue(int index, boolean forceRecalculateValue ) {
+        
         TimeSeries series = getTimeSeries();
         if (series == null) {
             // Series is null; the indicator doesn't need cache.
@@ -101,7 +106,7 @@ public abstract class CachedIndicator<T> extends AbstractIndicator<T> {
                 // Result covered by current cache
                 int resultInnerIndex = results.size() - 1 - (highestResultIndex - index);
                 result = results.get(resultInnerIndex);
-                if (result == null) {
+                if (result == null || forceRecalculateValue ) {
                     result = calculate(index);
                 }
                 results.set(resultInnerIndex, result);
